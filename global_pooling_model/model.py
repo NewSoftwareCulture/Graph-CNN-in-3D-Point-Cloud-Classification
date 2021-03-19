@@ -24,7 +24,7 @@ def model_architecture(para):
     gcn_1_output = tf.nn.dropout(gcn_1, keep_prob=keep_prob_1)
     gcn_1_pooling = globalPooling(gcn_1_output, featureNumber=para.gcn_1_filter_n)
     print("The output of the first gcn layer is {}".format(gcn_1_pooling))
-    print gcn_1_pooling
+    print(gcn_1_pooling)
 
     # gcn_layer_2
     

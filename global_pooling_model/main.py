@@ -12,12 +12,12 @@ start_time = time.time()
 samplingType = 'farthest_sampling'
 # ===============================Hyper parameters========================
 para = Parameters()
-print 'Dataset {}'.format(para.dataset)
-print 'The point number and the nearest neighbor number is {} and {}'.format(para.pointNumber, para.neighborNumber)
-print 'The first and second layer filter number is {} and {}'.format(para.gcn_1_filter_n, para.gcn_2_filter_n)
-print 'The fc neuron number is {} and the output number is {}'.format(para.fc_1_n, para.outputClassN)
-print 'The Chebyshev polynomial order for each layer are {} and {}'.format(para.chebyshev_1_Order, para.chebyshev_2_Order)
-print 'The weighting scheme is {} and the weighting scaler is {}'.format(para.weighting_scheme, para.weight_scaler)
+print('Dataset {}'.format(para.dataset))
+print('The point number and the nearest neighbor number is {} and {}'.format(para.pointNumber, para.neighborNumber))
+print('The first and second layer filter number is {} and {}'.format(para.gcn_1_filter_n, para.gcn_2_filter_n))
+print('The fc neuron number is {} and the output number is {}'.format(para.fc_1_n, para.outputClassN))
+print('The Chebyshev polynomial order for each layer are {} and {}'.format(para.chebyshev_1_Order, para.chebyshev_2_Order))
+print('The weighting scheme is {} and the weighting scaler is {}'.format(para.weighting_scheme, para.weight_scaler))
 
 
 #=======================================================================
@@ -40,7 +40,7 @@ with tf.Graph().as_default():
             a = pickle.load(handle)
         inputTrain, trainLabel, inputTest, testLabel = a 
     else:
-        print "Please enter a valid dataset"
+        print("Please enter a valid dataset")
     scaledLaplacianTrain, scaledLaplacianTest = prepareData(inputTrain, inputTest, neighborNumber, pointNumber)
 
     # ===============================Train model ================================
@@ -106,4 +106,4 @@ with tf.Graph().as_default():
             pickle.dump(test_mean_acc_record, handle)
 end_time = time.time()
 run_time = (end_time - start_time)/3600
-print 'The running time for this trail is {} hours'.format(run_time)	
+print('The running time for this trail is {} hours'.format(run_time))

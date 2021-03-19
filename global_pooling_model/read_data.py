@@ -13,6 +13,8 @@ import numpy as np
 from scipy.spatial import cKDTree
 import pickle
 from Parameters import Parameters
+from google.colab import files
+
 para = Parameters()
 def farthestSampling(file_names, NUM_POINT):
     file_indexs = np.arange(0, len(file_names))
@@ -46,10 +48,10 @@ def uniformSampling(file_names, NUM_POINT):
 # ModelNet40 official train/test split
 def load_data(NUM_POINT, sampleType):
     #BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    #BASE_DIR= os.path.abspath(os.path.dirname(os.getcwd()))
+    BASE_DIR= os.path.abspath(os.path.dirname(os.getcwd()))
     
     #print BASE_DIR
-    BASE_DIR = '/raid60/yingxue.zhang2/ICASSP_code/'    
+    # BASE_DIR = '/raid60/yingxue.zhang2/ICASSP_code/'    
     TRAIN_FILES = utils.getDataFiles( \
         os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048/train_files.txt'))
     TEST_FILES = utils.getDataFiles(\
@@ -73,36 +75,38 @@ def load_data(NUM_POINT, sampleType):
 def prepareGraph(inputData, neighborNumber, pointNumber, dataType):
     scaledLaplacianDict = dict()
     #baseDir = os.path.dirname(os.path.abspath(__file__))
-    baseDir ='/raid60/yingxue.zhang2/ICASSP_code'  
-    #baseDir= os.path.abspath(os.path.dirname(os.getcwd()))
+    # baseDir ='/raid60/yingxue.zhang2/ICASSP_code'  
+    baseDir= os.path.abspath(os.path.dirname(os.getcwd()))
     if para.dataset == 'ModelNet40':
         fileDir =  baseDir+ '/graph/' + dataType+'_pn_'+str(pointNumber)+'_nn_'+str(neighborNumber)
     elif para.dataset == 'ModelNet10':
         fileDir =  baseDir+ '/graph_ModelNet10/' + dataType+'_pn_'+str(pointNumber)+'_nn_'+str(neighborNumber)
     else:
-        print "Please enter a valid dataset"
+        print("Please enter a valid dataset")
         
     if (not os.path.isdir(fileDir)):
-        print "calculating the graph data"
+        print("calculating the graph data")
         os.makedirs(fileDir)
+        print('>> Prepare graph. Batches count: {}'.format(len(inputData)))
         for batchIndex in range(len(inputData)):
             batchInput = inputData[batchIndex]
             for i in range(len(batchInput)):
-                print i
+                print(i)
                 pcCoordinates = batchInput[i]
                 tree = cKDTree(pcCoordinates)
                 dd, ii = tree.query(pcCoordinates, k = neighborNumber)
                 A = adjacency(dd, ii)
                 scaledLaplacian = scaled_laplacian(A)
                 flattenLaplacian = scaledLaplacian.tolil().reshape((1, pointNumber*pointNumber))
-                if i ==0:
+                if i == 0:
                     batchFlattenLaplacian = flattenLaplacian
                 else:
                     batchFlattenLaplacian = scipy.sparse.vstack([batchFlattenLaplacian, flattenLaplacian])
             scaledLaplacianDict.update({batchIndex: batchFlattenLaplacian})
             with open(fileDir+'/batchGraph_'+str(batchIndex), 'wb') as handle:
                 pickle.dump(batchFlattenLaplacian, handle)
-            print "Saving the graph data batch"+str(batchIndex)
+            files.download(handle)
+            print("Saving the graph data batch"+str(batchIndex))
         
     else:
         print("Loading the graph data from "+dataType+'Data')
@@ -112,12 +116,14 @@ def prepareGraph(inputData, neighborNumber, pointNumber, dataType):
 
 def loadGraph(inputData, neighborNumber, pointNumber, fileDir):
     scaledLaplacianDict = dict()
+    print('>> Load graph. Batches count: {}'.format(len(inputData)))
+    # uploaded = files.upload()
     for batchIndex in range(len(inputData)):
         batchDataDir = fileDir+'/batchGraph_'+str(batchIndex)
         with open(batchDataDir, 'rb') as handle:
             batchGraph = pickle.load(handle)
         scaledLaplacianDict.update({batchIndex: batchGraph })
-        print "Finish loading batch_"+str(batchIndex)
+        print("Finish loading batch_"+str(batchIndex))
     return scaledLaplacianDict
         
                         
