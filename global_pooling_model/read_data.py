@@ -13,7 +13,7 @@ import numpy as np
 from scipy.spatial import cKDTree
 import pickle
 from Parameters import Parameters
-from google.colab import files
+# from google.colab import files
 
 para = Parameters()
 def farthestSampling(file_names, NUM_POINT):
@@ -105,7 +105,7 @@ def prepareGraph(inputData, neighborNumber, pointNumber, dataType):
             scaledLaplacianDict.update({batchIndex: batchFlattenLaplacian})
             with open(fileDir+'/batchGraph_'+str(batchIndex), 'wb') as handle:
                 pickle.dump(batchFlattenLaplacian, handle)
-            files.download(handle)
+            # files.download(handle)
             print("Saving the graph data batch"+str(batchIndex))
         
     else:
