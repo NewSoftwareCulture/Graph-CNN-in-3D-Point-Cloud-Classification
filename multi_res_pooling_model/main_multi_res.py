@@ -7,6 +7,10 @@ from utils import weight_dict_fc
 from sklearn.metrics import confusion_matrix
 import pickle
 import time
+
+print 'Tensorflow version: {}'.format(tf.__version__)
+print 'Tensorflow GPU: {}'.format(tf.test.gpu_device_name())
+
 # ===============================Hyper parameters========================
 para = parameters()
 samplingType = 'farthest_sampling'
