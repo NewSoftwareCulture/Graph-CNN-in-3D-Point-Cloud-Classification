@@ -58,9 +58,9 @@ def load_data(NUM_POINT, sampleType):
     #        (3) testing set data   (4) testing set label
 
     #BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    #BASE_DIR = '/raid60/yingxue.zhang2/ICASSP_code/'    
 
-
-    BASE_DIR = '/raid60/yingxue.zhang2/ICASSP_code/'    
+    BASE_DIR= os.path.abspath(os.path.dirname(os.getcwd()))
     TRAIN_FILES = utils.getDataFiles( \
         os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048/train_files.txt'))
     TEST_FILES = utils.getDataFiles(\
@@ -89,8 +89,9 @@ def prepareGraph(inputData, neighborNumber, pointNumber, dataType):
 
     scaledLaplacianDict = dict()
     #baseDir = os.path.dirname(os.path.abspath(__file__))
-    baseDir ='/raid60/yingxue.zhang2/ICASSP_code'  
-    #baseDir= os.path.abspath(os.path.dirname(os.getcwd()))
+    #baseDir ='/raid60/yingxue.zhang2/ICASSP_code'  
+    
+    baseDir= os.path.abspath(os.path.dirname(os.getcwd()))
     fileDir =  baseDir+ '/graph/' + dataType+'_pn_'+str(pointNumber)+'_nn_'+str(neighborNumber)
     if (not os.path.isdir(fileDir)):
         print "calculating the graph data"
